@@ -3,13 +3,13 @@ package test.service.impl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class TestServiceImpl {
-	Logger logger = LoggerFactory.getLogger(TestServiceImpl.class);
+public class TestBean {
+	Logger logger = LoggerFactory.getLogger(TestBean.class);
 	
 	private String name;
 	
 
-	public TestServiceImpl() {
+	public TestBean() {
 		logger.debug("TestServiceImplConstuctor");
 		
 	}
