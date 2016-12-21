@@ -8,9 +8,9 @@
     <!-- Uncomment and add your base-package here:
          <context:component-scan
             base-package="org.springframework.samples.service"/>  -->
-	<bean id = "testService" class="test.service.impl.TestServiceImpl">
+	<bean id = "testService" class="test.service.impl.TestBean">
 	
-	
+	 
 	</bean>
 
 </beans>
