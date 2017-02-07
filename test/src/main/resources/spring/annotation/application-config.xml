@@ -8,6 +8,6 @@
     <!-- Uncomment and add your base-package here:
          <context:component-scan
             base-package="org.springframework.samples.service"/>  -->
-	<bean id = "testService" class="test.service.impl.TestBean"></bean>
+	<context:component-scan base-package="test" />
 
 </beans>
