@@ -11,7 +11,7 @@ public class TestServiceImpl implements TestService{
 	Logger logger = LoggerFactory.getLogger(TestServiceImpl.class);
 	
 	public TestServiceImpl() {
-		logger.debug("testControllerConstructor");
+		logger.debug("TestServiceImplConstructor");
 	}
 
 	public String getTest(){
