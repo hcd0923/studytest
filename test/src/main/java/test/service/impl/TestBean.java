@@ -4,13 +4,23 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class TestBean {
-	Logger logger = LoggerFactory.getLogger(TestBean.class);
+	static Logger logger = LoggerFactory.getLogger(TestBean.class);
 	
 	private String name;
 	
+	public static TestBean getTestBeanStatic(){
+		logger.debug("TestBeanFactoryStatic");
+		return new TestBean();
+	}
+	
+	public TestBean getTestBean(){
+		logger.debug("TestBeanFactory");
+		return new TestBean();
+	}
+	
 
 	public TestBean() {
-		logger.debug("TestServiceImplConstuctor");
+		logger.debug("TestBeanConstructor");
 		
 	}
 
