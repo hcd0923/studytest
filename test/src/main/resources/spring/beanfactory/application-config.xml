@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	 xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/aop
+         http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
+    
+    <!-- Uncomment and add your base-package here:
+         <context:component-scan
+            base-package="org.springframework.samples.service"/>  -->
+       <bean id="testBean" class = "test.service.impl.TestBean" />
+       <bean class = "test.service.impl.TestBean" />
+       <bean class = "test.service.impl.TestBean" />
+       <!-- <bean name="testSameName" class = "test.service.impl.TestBean" />
+            <bean name="testSameName" class = "test.service.impl.TestBean" /> -->
+       <!-- <bean id = "testSameName1" name="testSameName" class = "test.service.impl.TestBean" />
+       	  <bean id = "testSameName2" name="testSameName" class = "test.service.impl.TestBean" /> -->
+       	  <bean id = "testSameName" name="testSameName1, testSameName2, testSameName3" class = "test.service.impl.TestBean" />
+       	  
+     	<bean id = "testBeanSingleton" class = "test.service.impl.TestBean" scope="singleton"/>
+       <bean id = "testBeanPrototype" class = "test.service.impl.TestBean" scope="prototype"/>
+       <bean id = "testBeanThreadtype" class = "test.service.impl.TestBean" scope="thread">
+       		<aop:scoped-proxy/>
+       </bean>
+       
+       <bean class="org.springframework.beans.factory.config.CustomScopeConfigurer">
+	      <property name="scopes">
+	          <map>
+	              <entry key="thread">
+	                  <bean class="org.springframework.context.support.SimpleThreadScope"/>
+	              </entry>
+	          </map>
+	      </property>
+	  </bean>
+	  
+	  
+	  <bean id = "testBeanSingletonByFactoryMethod" class = "test.service.impl.TestBean" scope="singleton" factory-method="getTestBeanStatic"/>
+	  <bean id = "testBeanPrototypeByFactoryMethod" class = "test.service.impl.TestBean" scope="prototype" factory-method="getTestBeanStatic"/>
+	  
+	  <bean id = "testBeanByFactoryBean" class = "test.service.impl.TestBean" scope="prototype" factory-bean="testBeanSingletonByFactoryMethod" factory-method="getTestBean"/>
+	  
+	  
+
+</beans>
+
