@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import transaction.Foo;
 import transaction.service.FooService;
@@ -15,7 +16,7 @@ import javax.annotation.Resource;
  * Created by cdhong on 2017-12-12.
  */
 
-@Transactional
+
 public class CombinationTransactionServletFooService implements FooService {
 
     Logger logger = LoggerFactory.getLogger(CombinationTransactionServletFooService.class);
@@ -23,11 +24,11 @@ public class CombinationTransactionServletFooService implements FooService {
     @Resource(name="jdbcTempleteServlet")
     private JdbcTemplate jdbcTemplate;
 
-//    @Resource(name = "fooService")
-//    private FooService fooService;
+    @Resource(name = "fooService")
+    private FooService fooService;
 
     public Foo getFoo(String fooName) {
-        logger.debug(jdbcTemplate.queryForList("SELECT * FROM USERS WHERE NAME = 'cdhong' ").toString());
+        logger.debug(jdbcTemplate.queryForList("SELECT * FROM USERS").toString());
         return null;
     }
 
@@ -37,12 +38,15 @@ public class CombinationTransactionServletFooService implements FooService {
     }
 
 
+    @Transactional(value = "txManagerServlet", propagation = Propagation.REQUIRED)
     public void insertFoo(Foo foo) {
         jdbcTemplate.update("INSERT INTO USERS VALUES (1, 'cdhong', 'cdhong@gmail.com')");
         jdbcTemplate.update("INSERT INTO USERS VALUES (2, 'alex', 'alex@yahoo.com')");
-        jdbcTemplate.update("INSERT INTO USERS VALUES (3, 'joel', 'joel@gmail.com')");
+        //        jdbcTemplate.update("INSERT INTO USERS VALUES (3, 'joel', 'joel@gmail.com')");
         getFoo("test");
-        getFoo("test", "rollback");
+        fooService.insertFoo(new Foo());
+        getFoo("test", "test");
+
     }
 
     public void updateFoo(Foo foo) {

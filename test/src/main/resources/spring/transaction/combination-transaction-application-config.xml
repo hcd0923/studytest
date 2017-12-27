@@ -43,7 +43,7 @@
 	<!-- DataSource를 잊지 마라 -->
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
 		<property name="driverClassName" value="org.h2.Driver"/>
-		<property name="url" value="jdbc:h2:mem:test;MODE=Oracle"/>
+		<property name="url" value="jdbc:h2:mem:test;MODE=MySQL"/>
 		<property name="username" value="sa"/>
 		<property name="password" value=""/>
 	</bean>

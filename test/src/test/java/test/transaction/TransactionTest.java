@@ -1,30 +1,32 @@
 package test.transaction;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.context.support.GenericXmlApplicationContext;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
-import org.springframework.web.context.ConfigurableWebApplicationContext;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
-import org.springframework.web.context.support.GenericWebApplicationContext;
-import org.springframework.web.context.support.StaticWebApplicationContext;
 import transaction.Foo;
+import transaction.TestFakeController;
 import transaction.service.FooService;
-import transaction.service.impl.CombinationTransactionServletFooService;
 
 /**
  * Created by cdhong on 2017-12-11.
  */
 
+
+@EnableTransactionManagement
 public class TransactionTest {
-
-
     @Test
     public void testTransactionPlatformTransactionManagerBasic(){
         ApplicationContext ctx = new ClassPathXmlApplicationContext("spring/transaction/application-config.xml");
@@ -51,7 +53,6 @@ public class TransactionTest {
 
     }
 
-
     @Test
     public void testDefaultTransactionXmlConfig(){
         ApplicationContext ctx = new ClassPathXmlApplicationContext("spring/transaction/application-config.xml");
@@ -71,6 +72,7 @@ public class TransactionTest {
     }
 
     @Test
+    @Transactional
     public void testJdbcTempleteTransactionXmlConfig(){
         ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext("spring/transaction/jdbctemplete-transaction-application-config.xml");
 
@@ -82,26 +84,18 @@ public class TransactionTest {
 
     @Test
     public void testCombinationTempleteTransactionXmlConfig(){
-        ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext("spring/transaction/jdbctemplete-transaction-application-config.xml");
+        ClassPathXmlApplicationContext cacChild = new ClassPathXmlApplicationContext ();
+        ClassPathXmlApplicationContext cacParents = new ClassPathXmlApplicationContext ("spring/transaction/combination-transaction-application-config.xml");
+        cacChild.setParent(cacParents);
+        cacChild.setConfigLocation("spring/transaction/servlet-context/combination-transaction-servlet-config.xml");
+        cacChild.refresh();
+        createUserTable(cacChild.getBean("jdbcTempleteServlet", JdbcTemplate.class));
 
-        createUserTable(ctx.getBean("jdbcTemplete", JdbcTemplate.class));
-        FooService fooService = (FooService) ctx.getBean("fooService");
-        fooService.insertFoo (new Foo());
-//        fooService.getFoo("cdhong");
+        FooService fooService  = (FooService) cacChild.getBean("fooServiceServlet");
 
+        TestFakeController testFakeController = (TestFakeController) cacChild.getBean("fooEntry");
+        testFakeController.comniationTransactionTest();
 
-        ClassPathXmlApplicationContext cacSevlet = new ClassPathXmlApplicationContext ("spring/transaction/servlet-context/combination-transaction-servlet-config.xml");
-//        cacSevlet.refresh();
-//        createUserTable(cacSevlet.getBean("jdbcTempleteServlet", JdbcTemplate.class));
-
-//        cacSevlet.setConfigLocation();
-        ClassPathXmlApplicationContext cac = new ClassPathXmlApplicationContext ("spring/transaction/combination-transaction-application-config.xml");
-//        cacSevlet.setParent(cac);
-
-
-          fooService = cacSevlet.getBean("fooServiceServlet", CombinationTransactionServletFooService.class);
-//        fooService.insertFoo (new Foo());
-        fooService.getFoo("cdhong");
     }
 
     @Test

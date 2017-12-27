@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import transaction.Foo;
 import transaction.service.FooService;
@@ -12,7 +13,7 @@ import transaction.service.FooService;
 /**
  * Created by cdhong on 2017-12-12.
  */
-@Transactional
+
 public class CombinationTransactionFooService implements FooService {
 
     Logger logger = LoggerFactory.getLogger(CombinationTransactionFooService.class);
@@ -21,7 +22,7 @@ public class CombinationTransactionFooService implements FooService {
     private JdbcTemplate jdbcTemplate;
 
     public Foo getFoo(String fooName) {
-        logger.debug(jdbcTemplate.queryForList("SELECT * FROM USERS WHERE NAME = 'cdhong' ").toString());
+        logger.debug(jdbcTemplate.queryForList("SELECT * FROM USERS ").toString());
         return null;
     }
 
@@ -30,11 +31,14 @@ public class CombinationTransactionFooService implements FooService {
 
     }
 
-    @Transactional("txManager")
+    @Transactional(value = "txManager", propagation = Propagation.REQUIRED)
     public void insertFoo(Foo foo) {
-        jdbcTemplate.update("INSERT INTO USERS VALUES (1, 'cdhong', 'cdhong@gmail.com')");
-        jdbcTemplate.update("INSERT INTO USERS VALUES (2, 'alex', 'alex@yahoo.com')");
+//        jdbcTemplate.update("INSERT INTO USERS VALUES (1, 'cdhong', 'cdhong@gmail.com')");
+//        jdbcTemplate.update("INSERT INTO USERS VALUES (2, 'alex', 'alex@yahoo.com')");
         jdbcTemplate.update("INSERT INTO USERS VALUES (3, 'joel', 'joel@gmail.com')");
+        getFoo("");
+//        getFoo("", "");
+
     }
 
     public void updateFoo(Foo foo) {
